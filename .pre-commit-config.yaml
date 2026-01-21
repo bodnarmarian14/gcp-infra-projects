@@ -1,0 +1,53 @@
+repos:
+  # =======================================================
+  # 1. BASIC FILE HYGIENE (Fixes line endings, JSON/YAML)
+  # =======================================================
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: detect-private-key  # Basic check for unencrypted keys
+
+  # =======================================================
+  # 2. TERRAFORM (Docs, Linting, Formatting)
+  # =======================================================
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.88.0
+    hooks:
+      - id: terraform_fmt         # Auto-format .tf files
+      - id: terraform_tflint      # Advanced Linting
+      - id: terraform_docs_without_aggregate_type_defaults
+        args: ['--args=--lockfile=false']
+
+  # =======================================================
+  # 3. TERRAGRUNT (Auto-Format hcl files)
+  # =======================================================
+  - repo: https://github.com/gruntwork-io/pre-commit
+    rev: v0.1.23
+    hooks:
+      - id: terragrunt-hclfmt     # Auto-format terragrunt.hcl files
+
+  # =======================================================
+  # 4. KUBERNETES (Validation & Best Practices)
+  # =======================================================
+  - repo: https://github.com/bridgecrewio/checkov.git
+    rev: 3.2.6
+    hooks:
+      - id: checkov
+        name: Checkov (K8s & TF Security)
+        # Scan only K8s files or TF files (prevents scanning random things)
+        args: ["--quiet", "--framework", "kubernetes", "--compact"]
+        # Optional: Skip specific checks with --skip-check CKV_K8S_10
+
+  # =======================================================
+  # 5. SECRETS (Gitleaks with Config)
+  # =======================================================
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.2
+    hooks:
+      - id: gitleaks
