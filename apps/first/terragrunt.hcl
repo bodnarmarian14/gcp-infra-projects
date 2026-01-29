@@ -1,8 +1,11 @@
-# applications/ecom-backend/terragrunt.hcl
+locals {
+  # Automatically load common.yaml variables
+  common_vars = yamldecode(file("common.yaml"))
+}
 
 # Include the root configuration (backend, provider, globals)
 include "root" {
-  path = find_in_parent_folders()
+  path = find_in_parent_folders("root.hcl")
 }
 
 # Source the Project Factory Module
@@ -15,7 +18,7 @@ terraform {
 inputs = {
   name       = "ecom-backend-prod"
   project_id = "ecom-backend-prod-x9z" # Optional: specify or let it auto-generate
-  
+
   # Which APIs does this app need?
   activate_apis = [
     "compute.googleapis.com",
