@@ -1,0 +1,9 @@
+steps:
+  - name: 'alpine'
+    args: ['ls', '-l']
+  
+  - name: 'alpine'
+    args: ['echo', 'Hello from Cloud Build!']
+
+options:
+  logging: CLOUD_LOGGING_ONLY
